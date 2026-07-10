@@ -46,6 +46,7 @@ export default function UploadInstructions() {
   const [fileError, setFileError] = useState("");
   const [extractedText, setExtractedText] = useState("");
   const [ocrError, setOcrError] = useState("");
+  const [pasteMode, setPasteMode] = useState(false);
 
   const startOcr = useCallback(async (file: File) => {
     setPhase("scanning");
@@ -121,6 +122,7 @@ export default function UploadInstructions() {
     setExtractedText("");
     setOcrError("");
     setFileError("");
+    setPasteMode(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -163,85 +165,124 @@ export default function UploadInstructions() {
             Upload Your Instructions
           </h2>
           <p className="text-text-secondary mt-1">
-            Upload a photo, screenshot, or PDF of your prep instructions.
-            We'll scan the document and extract the key details.
+            {pasteMode
+              ? "Paste the text of your prep instructions below."
+              : "Upload a photo, screenshot, or PDF of your prep instructions. We'll scan the document and extract the key details."}
           </p>
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={ACCEPTED_EXTENSIONS}
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-
-        {/* Drop zone */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragging(true);
-          }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          className={`relative flex flex-col items-center justify-center gap-4 rounded-card border-2 border-dashed p-10 transition-colors cursor-pointer bg-transparent ${
-            isDragging
-              ? "border-brand-400 bg-brand-50"
-              : "border-border hover:border-brand-300 hover:bg-surface-muted"
-          }`}
-        >
-          <div className="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center">
-            <Upload className="w-7 h-7 text-brand-500" />
-          </div>
-          <div className="text-center">
-            <p className="text-sm font-medium text-text-primary">
-              {isDragging
-                ? "Drop your file here"
-                : "Drag and drop your file here"}
-            </p>
-            <p className="text-xs text-text-muted mt-1">or click to browse</p>
-          </div>
-          <div className="flex items-center gap-4 text-xs text-text-muted">
-            <span className="flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5" /> PDF
-            </span>
-            <span className="flex items-center gap-1">
-              <FileImage className="w-3.5 h-3.5" /> Screenshot
-            </span>
-            <span className="flex items-center gap-1">
-              <Camera className="w-3.5 h-3.5" /> Photo
-            </span>
-          </div>
-        </button>
-
-        {fileError && (
-          <Card variant="warm" className="flex gap-3 items-start">
-            <AlertTriangle className="w-5 h-5 text-warm-600 shrink-0 mt-0.5" />
-            <div className="text-sm text-warm-800">
-              <p className="font-medium">File not supported</p>
-              <p className="mt-1 text-warm-700">{fileError}</p>
+        {pasteMode ? (
+          <>
+            <div>
+              <label className="text-xs font-semibold text-text-muted mb-2 block">
+                Your instructions
+              </label>
+              <textarea
+                value={extractedText}
+                onChange={(e) => setExtractedText(e.target.value)}
+                placeholder="Paste your prep instructions here, or type the key details (procedure date, arrival time, prep type, dose times, etc.)"
+                rows={10}
+                autoFocus
+                className="w-full rounded-card border border-border bg-surface px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 resize-y leading-relaxed"
+              />
             </div>
-          </Card>
+
+            <div className="flex gap-3">
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => {
+                  setPasteMode(false);
+                  setExtractedText("");
+                }}
+              >
+                Upload a File Instead
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleConfirmText}
+                disabled={!extractedText.trim() || isParsing}
+              >
+                {isParsing ? "Parsing..." : "Parse Text"}
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_EXTENSIONS}
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+
+            {/* Drop zone */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              className={`relative flex flex-col items-center justify-center gap-4 rounded-card border-2 border-dashed p-10 transition-colors cursor-pointer bg-transparent ${
+                isDragging
+                  ? "border-brand-400 bg-brand-50"
+                  : "border-border hover:border-brand-300 hover:bg-surface-muted"
+              }`}
+            >
+              <div className="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center">
+                <Upload className="w-7 h-7 text-brand-500" />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-medium text-text-primary">
+                  {isDragging
+                    ? "Drop your file here"
+                    : "Drag and drop your file here"}
+                </p>
+                <p className="text-xs text-text-muted mt-1">or click to browse</p>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-text-muted">
+                <span className="flex items-center gap-1">
+                  <FileText className="w-3.5 h-3.5" /> PDF
+                </span>
+                <span className="flex items-center gap-1">
+                  <FileImage className="w-3.5 h-3.5" /> Screenshot
+                </span>
+                <span className="flex items-center gap-1">
+                  <Camera className="w-3.5 h-3.5" /> Photo
+                </span>
+              </div>
+            </button>
+
+            {fileError && (
+              <Card variant="warm" className="flex gap-3 items-start">
+                <AlertTriangle className="w-5 h-5 text-warm-600 shrink-0 mt-0.5" />
+                <div className="text-sm text-warm-800">
+                  <p className="font-medium">File not supported</p>
+                  <p className="mt-1 text-warm-700">{fileError}</p>
+                </div>
+              </Card>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setPasteMode(true)}
+              className="flex items-center justify-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 bg-transparent border-0 cursor-pointer p-0"
+            >
+              <PenLine className="w-3.5 h-3.5" />
+              Or paste instructions instead
+            </button>
+          </>
         )}
 
-        <Card variant="calm" className="flex gap-3 items-start">
-          <ScanSearch className="w-5 h-5 text-calm-600 shrink-0 mt-0.5" />
-          <div className="text-sm text-calm-800">
-            <p className="font-medium">How it works</p>
-            <p className="mt-1 text-calm-700">
-              We'll scan your document to find procedure dates, prep timing,
-              and medication details. You'll review the extracted text and
-              confirm before we build your timeline — nothing is final until
-              you confirm.
-            </p>
-          </div>
-        </Card>
-
         <p className="text-xs text-text-muted text-center">
-          Your file is processed on your device and never uploaded to any
-          server.
+          {pasteMode
+            ? "Your text is processed on your device and never uploaded to any server."
+            : "Your file is processed on your device and never uploaded to any server."}
         </p>
       </div>
     );
