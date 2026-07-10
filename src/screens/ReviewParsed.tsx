@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
   AlertTriangle,
-  ArrowLeft,
   ScanSearch,
   PenLine,
   RotateCcw,
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import BackLink from "../components/BackLink";
 import { generatePlan, type ManualSetupInput } from "../lib/generate-plan";
 import { savePlan } from "../lib/plan-utils";
 import { loadSelectedProcedure } from "./ProcedureSelect";
@@ -322,7 +322,7 @@ export default function ReviewParsed() {
   if (!parseResult) {
     return (
       <div className="flex flex-col gap-5 items-center py-12 animate-fade-in-up">
-        <div className="w-16 h-16 rounded-2xl bg-surface-muted flex items-center justify-center">
+        <div className="w-16 h-16 rounded-card bg-surface-muted flex items-center justify-center">
           <ScanSearch className="w-8 h-8 text-text-muted" />
         </div>
         <div className="text-center">
@@ -383,7 +383,7 @@ export default function ReviewParsed() {
 
   function renderInput(field: FieldDef) {
     const base =
-      "w-full rounded-lg border border-border px-3 py-2.5 text-sm text-text-primary bg-surface focus:outline-2 focus:outline-brand-500 focus:border-brand-500 transition-colors";
+      "w-full rounded-card border border-border px-3 py-2.5 text-sm text-text-primary bg-surface focus:outline-2 focus:outline-brand-500 focus:border-brand-500 transition-colors";
 
     if (field.type === "select") {
       return (
@@ -446,19 +446,12 @@ export default function ReviewParsed() {
 
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
-      <button
-        type="button"
-        onClick={() => navigate("/upload")}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Upload
-      </button>
+      <BackLink label="Back to Upload" onClick={() => navigate("/upload")} className="self-start" />
 
       <div>
         <div className="flex items-center gap-2 mb-1">
           <ScanSearch className="w-5 h-5 text-brand-500" />
-          <h2 className="text-xl font-bold text-text-primary">
+          <h2 className="font-serif text-xl font-semibold text-text-primary">
             Review Your Details
           </h2>
         </div>
@@ -554,7 +547,7 @@ export default function ReviewParsed() {
             <div
               key={field.planKey}
               id={`field-${field.planKey}`}
-              className={`rounded-xl ${cardBorder} bg-surface p-4 transition-colors`}
+              className={`rounded-card ${cardBorder} bg-surface p-4 transition-colors`}
             >
               {/* Header row */}
               <div className="flex items-center justify-between mb-1.5">
@@ -585,7 +578,7 @@ export default function ReviewParsed() {
                       onClick={() =>
                         setEditingField(editing ? null : field.planKey)
                       }
-                      className="p-1.5 rounded-lg text-text-muted hover:text-brand-600 hover:bg-brand-50 transition-colors bg-transparent border-0 cursor-pointer"
+                      className="p-1.5 rounded-full text-text-muted hover:text-brand-600 hover:bg-brand-50 transition-colors bg-transparent border-0 cursor-pointer"
                       title={editing ? "Done" : "Edit"}
                     >
                       {editing ? (
@@ -686,7 +679,7 @@ export default function ReviewParsed() {
                 </div>
 
                 {/* Suggestion */}
-                <div className={`text-xs leading-relaxed rounded-lg px-3 py-2 flex items-start gap-2 ${
+                <div className={`text-xs leading-relaxed rounded-card px-3 py-2 flex items-start gap-2 ${
                   conflict.severity === "error"
                     ? "bg-urgent-50 text-urgent-700"
                     : "bg-warm-50 text-warm-700"
@@ -707,7 +700,7 @@ export default function ReviewParsed() {
                         document.getElementById(`field-${firstField}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                       }
                     }}
-                    className={`text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors cursor-pointer bg-surface ${
+                    className={`text-xs font-medium px-2.5 py-1.5 rounded-full border transition-colors cursor-pointer bg-surface ${
                       conflict.severity === "error"
                         ? "border-urgent-200 text-urgent-700 hover:bg-urgent-50"
                         : "border-warm-200 text-warm-700 hover:bg-warm-50"
@@ -721,7 +714,7 @@ export default function ReviewParsed() {
                   <button
                     type="button"
                     onClick={() => navigate("/setup")}
-                    className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-border text-text-secondary hover:bg-surface-muted transition-colors cursor-pointer bg-surface"
+                    className="text-xs font-medium px-2.5 py-1.5 rounded-full border border-border text-text-secondary hover:bg-surface-muted transition-colors cursor-pointer bg-surface"
                   >
                     Enter manually instead
                   </button>

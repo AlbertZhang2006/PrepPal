@@ -7,7 +7,7 @@ interface CardProps {
 }
 
 const VARIANT_STYLES = {
-  default: "bg-surface border-border shadow-sm",
+  default: "bg-surface border-border shadow-card",
   calm: "bg-calm-50 border-calm-200",
   warm: "bg-warm-50 border-warm-200",
   urgent: "bg-urgent-50 border-urgent-200",
@@ -20,7 +20,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`rounded-card border p-4 ${VARIANT_STYLES[variant]} ${className}`}
+      className={`rounded-card border p-5 ${VARIANT_STYLES[variant]} ${className}`}
     >
       {children}
     </div>

@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Stethoscope, ChevronRight } from "lucide-react";
+import { Stethoscope, ChevronRight } from "lucide-react";
 import Card from "../components/Card";
+import BackLink from "../components/BackLink";
 import { getAllActiveTemplates } from "../lib/procedure-templates";
 import { createDemoPlan, setDemoMode } from "../lib/demo";
 import { savePlan } from "../lib/plan-utils";
@@ -45,17 +46,10 @@ export default function ProcedureSelect() {
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in-up">
-      <button
-        type="button"
-        onClick={() => navigate("/")}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Welcome
-      </button>
+      <BackLink label="Back to Welcome" onClick={() => navigate("/")} className="self-start" />
 
       <div>
-        <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-xl font-semibold text-text-primary flex items-center gap-2">
           <Stethoscope className="w-5 h-5 text-brand-500" />
           What procedure are you prepping for?
         </h2>

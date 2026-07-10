@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import BackLink from "../components/BackLink";
 import { generatePlan, type ManualSetupInput } from "../lib/generate-plan";
 import { savePlan } from "../lib/plan-utils";
 import { loadSelectedProcedure } from "./ProcedureSelect";
@@ -69,7 +70,7 @@ function Field({ label, htmlFor, helper, required, children }: FieldProps) {
 }
 
 function inputClass(hasError: boolean = false) {
-  return `w-full rounded-lg border px-3 py-2.5 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 focus:border-brand-500 transition-colors ${
+  return `w-full rounded-card border px-3 py-2.5 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 focus:border-brand-500 transition-colors ${
     hasError ? "border-urgent-300 bg-urgent-50" : "border-border"
   }`;
 }
@@ -220,14 +221,11 @@ export default function ManualSetup() {
 
   return (
     <div className="flex flex-col gap-6">
-      <button
-        type="button"
+      <BackLink
+        label={step === "schedule" ? "Change Procedure" : "Back"}
         onClick={handleBack}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {step === "schedule" ? "Change Procedure" : "Back"}
-      </button>
+        className="self-start"
+      />
 
       {/* Progress indicator */}
       <div className="flex items-center gap-2">
@@ -266,7 +264,7 @@ export default function ManualSetup() {
         <p className="text-xs font-medium text-brand-600 mb-1">
           {template.displayName}
         </p>
-        <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-xl font-semibold text-text-primary flex items-center gap-2">
           {(() => { const Icon = STEP_META[step].icon; return <Icon className="w-5 h-5 text-brand-500" />; })()}
           {step === "prep" && isEgd ? "Your Fasting Schedule" : STEP_META[step].title}
         </h2>
@@ -354,7 +352,7 @@ export default function ManualSetup() {
                   {PREP_OPTIONS.map((opt) => (
                     <label
                       key={opt.value}
-                      className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                      className={`flex items-start gap-3 p-3 rounded-card border cursor-pointer transition-colors ${
                         prepType === opt.value
                           ? "border-brand-400 bg-brand-50"
                           : "border-border bg-surface hover:bg-surface-muted"

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import type { EventCategory, ActiveProcedureType } from "../lib/types";
 import {
   loadPlan,
@@ -98,14 +99,7 @@ export default function EventDetail() {
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back */}
-      <button
-        type="button"
-        onClick={() => navigate("/timeline")}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Timeline
-      </button>
+      <BackLink label="Back to Timeline" onClick={() => navigate("/timeline")} className="self-start" />
 
       {/* Header */}
       <div>
@@ -127,7 +121,7 @@ export default function EventDetail() {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold text-text-primary">{event.title}</h2>
+        <h2 className="font-serif text-xl font-semibold text-text-primary">{event.title}</h2>
 
         <div className="flex items-center gap-2 mt-2 text-sm text-text-secondary">
           <Clock className="w-4 h-4 text-text-muted" />
@@ -237,7 +231,7 @@ export default function EventDetail() {
             <div className="flex items-start gap-2.5">
               <ShieldAlert className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-xs font-semibold text-brand-700 uppercase tracking-wider mb-1">
+                <h3 className="text-xs font-semibold text-brand-700 mb-1">
                   Important to know
                 </h3>
                 <p className="text-sm text-brand-800 leading-relaxed">

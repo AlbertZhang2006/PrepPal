@@ -37,11 +37,11 @@ export default function Layout() {
       </a>
       <DemoBanner />
 
-      <header className="bg-surface border-b border-border px-4 py-3 shadow-sm">
+      <header className="bg-surface border-b border-border px-4 py-4">
         <div className="max-w-2xl mx-auto flex items-center gap-2.5">
-          <PrepPalIcon size={32} />
+          <PrepPalIcon size={36} />
           <div>
-            <h1 className="text-lg font-semibold text-text-primary leading-tight">
+            <h1 className="font-serif text-xl font-semibold text-text-primary leading-tight">
               PrepPal
             </h1>
             <span className="text-xs text-text-muted hidden sm:block leading-tight">
@@ -56,22 +56,30 @@ export default function Layout() {
       </main>
 
       {!hideNav && (
-        <nav aria-label="Main navigation" className="bg-surface border-t border-border sticky bottom-0 z-10 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+        <nav aria-label="Main navigation" className="bg-surface border-t border-border sticky bottom-0 z-10 shadow-hero">
           <div className="max-w-2xl mx-auto flex">
             {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex-1 flex flex-col items-center gap-1 py-2.5 px-1 text-xs transition-colors ${
+                  `flex-1 flex flex-col items-center py-2.5 px-1 text-xs transition-colors ${
                     isActive
-                      ? "text-brand-600 font-medium"
-                      : "text-text-muted hover:text-text-secondary"
-                  } ${label === "Help" && !isActive ? "text-warm-500 hover:text-warm-600" : ""}`
+                      ? "text-brand-700 font-medium"
+                      : `text-text-muted hover:text-text-secondary ${label === "Help" ? "text-warm-500 hover:text-warm-600" : ""}`
+                  }`
                 }
               >
-                <Icon className="w-5 h-5" />
-                <span>{label}</span>
+                {({ isActive }) => (
+                  <span
+                    className={`flex flex-col items-center gap-1 rounded-full px-3 py-1 transition-colors ${
+                      isActive ? "bg-brand-50" : ""
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{label}</span>
+                  </span>
+                )}
               </NavLink>
             ))}
           </div>

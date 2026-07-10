@@ -176,7 +176,7 @@ function EscalationBanner({
 
   return (
     <div
-      className={`rounded-xl px-3.5 py-2.5 mt-1 ${
+      className={`rounded-card px-3.5 py-2.5 mt-1 ${
         variant === "urgent"
           ? "bg-urgent-50 border border-urgent-200"
           : "bg-warm-50 border border-warm-200"
@@ -279,7 +279,7 @@ export default function AskPrepPal() {
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-lg font-semibold text-text-primary flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-brand-500" aria-hidden="true" />
           Ask PrepPal
         </h2>
@@ -292,7 +292,7 @@ export default function AskPrepPal() {
       {messages.length === 0 && (
         <>
           <div>
-            <p className="text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
+            <p className="text-sm font-semibold text-text-primary mb-2">
               Common questions
             </p>
             <div className="flex flex-col gap-1.5">
@@ -301,7 +301,7 @@ export default function AskPrepPal() {
                   key={q}
                   type="button"
                   onClick={() => handleSend(q)}
-                  className="text-left text-sm px-3.5 py-2.5 rounded-lg border border-border bg-surface text-text-secondary hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors cursor-pointer"
+                  className="text-left text-sm px-3.5 py-2.5 rounded-card border border-border bg-surface text-text-secondary hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors cursor-pointer"
                 >
                   {q}
                 </button>
@@ -388,13 +388,13 @@ export default function AskPrepPal() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about your prep..."
           aria-label="Ask a question about your prep"
-          className="flex-1 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
+          className="flex-1 rounded-card border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
         />
         <button
           type="submit"
           disabled={!input.trim()}
           aria-label="Send question"
-          className="w-11 h-11 rounded-xl bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-0 cursor-pointer shrink-0"
+          className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-0 cursor-pointer shrink-0"
         >
           <Send className="w-4 h-4" />
         </button>

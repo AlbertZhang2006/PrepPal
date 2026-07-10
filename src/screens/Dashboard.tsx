@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import FocusStepCard from "../components/FocusStepCard";
+import CelebrationAccent from "../components/CelebrationAccent";
 import type { PrepPlan, EventCategory, ActiveProcedureType } from "../lib/types";
 import {
   loadPlan,
@@ -90,11 +92,6 @@ function getDashboardStatus(plan: PrepPlan, now: Date): DashboardStatus {
   }
 
   return "on-track";
-}
-
-function firstSentence(text: string): string {
-  const match = text.match(/^[^.!?]+[.!?]/);
-  return match ? match[0] : text;
 }
 
 function getRelativeTimeLabel(isoString: string, now: Date): string {
@@ -278,11 +275,11 @@ function TrackModal({
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className="relative w-full max-w-md mx-4 mb-4 sm:mb-0 bg-surface rounded-2xl shadow-xl overflow-hidden animate-fade-in-up">
+      <div className="relative w-full max-w-md mx-4 mb-4 sm:mb-0 bg-surface rounded-hero shadow-hero overflow-hidden animate-fade-in-up">
         <div className="flex items-center justify-between px-5 pt-5 pb-0">
           <div className="flex items-center gap-2">
             <Activity className="w-5 h-5 text-brand-600" aria-hidden="true" />
-            <h3 id="track-modal-title" className="text-lg font-bold text-text-primary">
+            <h3 id="track-modal-title" className="font-serif text-lg font-semibold text-text-primary">
               Am I On Track?
             </h3>
           </div>
@@ -423,8 +420,8 @@ export default function Dashboard() {
       <div className="flex flex-col gap-3">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-text-primary">Your Prep Plan</h2>
-          <span className="text-xs text-text-muted flex items-center gap-1">
+          <h2 className="font-serif text-xl font-semibold text-text-primary">Your Prep Plan</h2>
+          <span className="text-xs text-text-muted flex items-center gap-1 bg-surface-muted rounded-full px-2.5 py-1">
             <Clock className="w-3 h-3" aria-hidden="true" />
             {procedureCountdown}
           </span>
@@ -432,53 +429,20 @@ export default function Dashboard() {
 
         {/* Hero card */}
         {heroEvent ? (
-          <Card className="bg-brand-50 border-brand-200">
-            <p className="text-xs font-medium uppercase tracking-wider text-brand-500 mb-2">
-              {currentEvent ? "Happening Now" : "Your Next Step"}
-            </p>
-            <h3 className="text-lg font-bold text-brand-900">
-              {heroEvent.title}
-            </h3>
-            <p className="text-sm text-brand-600 mt-0.5">
-              {getRelativeTimeLabel(heroEvent.startTime, now)}
-            </p>
-            <p className="text-sm text-brand-800 leading-relaxed mt-2">
-              {firstSentence(heroEvent.guidance.whatToDo)}
-            </p>
-            {heroSupporting.length > 0 && (
-              <div className="mt-2 pt-2 border-t border-brand-200/60">
-                <p className="text-xs font-medium text-brand-500 mb-0.5">Also at this time:</p>
-                {heroSupporting.map((s) => (
-                  <p key={s.id} className="text-xs text-brand-700 leading-relaxed">
-                    • {s.title}
-                  </p>
-                ))}
-              </div>
-            )}
-            <div className="flex gap-2.5 mt-3">
-              <Button
-                size="sm"
-                className="flex-1"
-                onClick={() => navigate(`/event/${heroEvent.id}`)}
-              >
-                View Step
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="flex-1"
-                onClick={() => handleMarkComplete(heroEvent.id)}
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                Done
-              </Button>
-            </div>
-          </Card>
+          <FocusStepCard
+            event={heroEvent}
+            variant={currentEvent ? "current" : "next"}
+            now={now}
+            supportingEvents={heroSupporting}
+            onView={() => navigate(`/event/${heroEvent.id}`)}
+            onMarkDone={() => handleMarkComplete(heroEvent.id)}
+          />
         ) : (
           <Card variant="calm" className="py-6 text-center">
-            <CheckCircle2 className="w-10 h-10 text-calm-500 mx-auto" aria-hidden="true" />
-            <h3 className="text-lg font-bold text-calm-800 mt-3">
+            <CelebrationAccent className="mx-auto">
+              <CheckCircle2 className="w-10 h-10 text-calm-500" aria-hidden="true" />
+            </CelebrationAccent>
+            <h3 className="font-serif text-xl font-semibold text-calm-800 mt-3">
               You're all set!
             </h3>
             <p className="text-sm text-calm-700 mt-1 leading-relaxed">
@@ -496,10 +460,12 @@ export default function Dashboard() {
         )}
 
         {/* Status card — compact: label + note, thin bar, action */}
-        <Card variant={getStatusCardVariant(dashStatus)} className="py-3">
+        <Card variant={getStatusCardVariant(dashStatus)} className="py-4">
           <div className="flex items-center gap-2">
             <span
-              className={`w-2 h-2 rounded-full shrink-0 ${getStatusDotColor(dashStatus)}`}
+              className={`w-2 h-2 rounded-full shrink-0 ${getStatusDotColor(dashStatus)} ${
+                dashStatus === "on-track" || dashStatus === "upcoming-soon" ? "animate-pulse-soft" : ""
+              }`}
               aria-hidden="true"
             />
             <span className="text-sm font-semibold text-text-primary">
@@ -510,9 +476,9 @@ export default function Dashboard() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3 mt-2.5">
+          <div className="flex items-center gap-3 mt-3">
             <div
-              className="flex-1 h-1.5 bg-white/60 rounded-full overflow-hidden"
+              className="flex-1 h-2 bg-white/60 rounded-full overflow-hidden"
               role="progressbar"
               aria-valuenow={progress.percentage}
               aria-valuemin={0}
@@ -608,8 +574,8 @@ export default function Dashboard() {
 
       {/* ── Coming Up ── */}
       {comingUpEvents.length > 0 && (
-        <div className="mt-8">
-          <p className="text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
+        <div className="mt-10">
+          <p className="text-sm font-semibold text-text-primary mb-2">
             Coming Up
           </p>
           <Card>
@@ -623,7 +589,9 @@ export default function Dashboard() {
                     onClick={() => navigate(`/event/${event.id}`)}
                     className="flex items-center gap-3 py-3 first:pt-0.5 last:pb-0.5 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
                   >
-                    <Icon className="w-4 h-4 text-text-muted shrink-0" aria-hidden="true" />
+                    <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center shrink-0">
+                      <Icon className="w-4 h-4 text-text-muted" aria-hidden="true" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-text-primary truncate">
                         {event.title}
@@ -650,14 +618,16 @@ export default function Dashboard() {
       )}
 
       {/* ── Tools — single quiet card ── */}
-      <Card className="mt-8">
+      <Card className="mt-10">
         <div className="flex flex-col divide-y divide-border">
           <button
             type="button"
             onClick={() => navigate("/supplies")}
-            className="flex items-center gap-3 py-2.5 first:pt-0 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
+            className="flex items-center gap-3 py-3 first:pt-0 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
           >
-            <ShoppingCart className={`w-4 h-4 shrink-0 ${suppliesAllDone ? "text-calm-500" : "text-text-muted"}`} aria-hidden="true" />
+            <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center shrink-0">
+              <ShoppingCart className={`w-4 h-4 ${suppliesAllDone ? "text-calm-500" : "text-text-muted"}`} aria-hidden="true" />
+            </div>
             <span className="text-sm text-text-primary flex-1">Prep Supplies</span>
             <span className="text-xs text-text-muted shrink-0">
               {suppliesAllDone ? "All ready" : `${sp.checked}/${sp.total}`}
@@ -668,9 +638,11 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => navigate("/ask")}
-            className="flex items-center gap-3 py-2.5 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
+            className="flex items-center gap-3 py-3 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
           >
-            <MessageCircle className="w-4 h-4 text-text-muted shrink-0" aria-hidden="true" />
+            <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center shrink-0">
+              <MessageCircle className="w-4 h-4 text-text-muted" aria-hidden="true" />
+            </div>
             <span className="text-sm text-text-primary flex-1">Ask a Question</span>
             <ChevronRight className="w-3.5 h-3.5 text-text-muted shrink-0" />
           </button>
@@ -678,9 +650,11 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => navigate("/emergency")}
-            className="flex items-center gap-3 py-2.5 last:pb-0 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
+            className="flex items-center gap-3 py-3 last:pb-0 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
           >
-            <Phone className="w-4 h-4 text-text-muted shrink-0" aria-hidden="true" />
+            <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center shrink-0">
+              <Phone className="w-4 h-4 text-text-muted" aria-hidden="true" />
+            </div>
             <span className="text-sm text-text-primary flex-1">Clinic Numbers</span>
             <ChevronRight className="w-3.5 h-3.5 text-text-muted shrink-0" />
           </button>

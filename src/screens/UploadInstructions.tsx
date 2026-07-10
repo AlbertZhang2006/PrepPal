@@ -6,7 +6,6 @@ import {
   FileText,
   Camera,
   ArrowRight,
-  ArrowLeft,
   AlertTriangle,
   X,
   ScanSearch,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import BackLink from "../components/BackLink";
 import { extractText, type OcrProgress } from "../lib/ocr";
 import { parsePrepInstructions } from "../lib/ai-parse-service";
 import { loadSelectedProcedure } from "./ProcedureSelect";
@@ -149,20 +149,17 @@ export default function UploadInstructions() {
   if (phase === "upload") {
     return (
       <div className="flex flex-col gap-6">
-        <button
-          type="button"
+        <BackLink
+          label="Change Procedure"
           onClick={() => navigate("/select-procedure?next=upload")}
-          className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Change Procedure
-        </button>
+          className="self-start"
+        />
 
         <div>
           <p className="text-xs font-medium text-brand-600 mb-1">
             {template.displayName}
           </p>
-          <h2 className="text-2xl font-bold text-text-primary">
+          <h2 className="font-serif text-2xl font-semibold text-text-primary">
             Upload Your Instructions
           </h2>
           <p className="text-text-secondary mt-1">
@@ -189,13 +186,13 @@ export default function UploadInstructions() {
           }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
-          className={`relative flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-10 transition-colors cursor-pointer bg-transparent ${
+          className={`relative flex flex-col items-center justify-center gap-4 rounded-card border-2 border-dashed p-10 transition-colors cursor-pointer bg-transparent ${
             isDragging
               ? "border-brand-400 bg-brand-50"
               : "border-border hover:border-brand-300 hover:bg-surface-muted"
           }`}
         >
-          <div className="w-14 h-14 rounded-xl bg-brand-50 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center">
             <Upload className="w-7 h-7 text-brand-500" />
           </div>
           <div className="text-center">
@@ -256,7 +253,7 @@ export default function UploadInstructions() {
       <div className="flex flex-col gap-6 items-center py-8">
         <div className="relative w-full max-w-sm">
           {/* Document preview */}
-          <div className="relative rounded-xl border border-border bg-surface overflow-hidden aspect-[3/4] flex items-center justify-center">
+          <div className="relative rounded-card border border-border bg-surface overflow-hidden aspect-[3/4] flex items-center justify-center">
             {filePreviewUrl ? (
               <img
                 src={filePreviewUrl}
@@ -272,7 +269,7 @@ export default function UploadInstructions() {
 
             {/* Scan line overlay */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute left-0 right-0 h-0.5 bg-brand-400 shadow-[0_0_12px_2px_rgba(12,147,231,0.4)] animate-scan-line" />
+              <div className="absolute left-0 right-0 h-0.5 bg-brand-400 shadow-[0_0_12px_2px_rgba(62,112,122,0.4)] animate-scan-line" />
             </div>
 
             {/* Corner markers */}
@@ -311,14 +308,7 @@ export default function UploadInstructions() {
   if (phase === "error") {
     return (
       <div className="flex flex-col gap-5 animate-fade-in-up">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Upload
-        </button>
+        <BackLink label="Back to Upload" onClick={handleReset} className="self-start" />
 
         <Card variant="warm">
           <div className="flex items-start gap-3">
@@ -345,7 +335,7 @@ export default function UploadInstructions() {
             onChange={(e) => setExtractedText(e.target.value)}
             placeholder="Paste your prep instructions here, or type the key details (procedure date, arrival time, prep type, dose times, etc.)"
             rows={10}
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 resize-y leading-relaxed"
+            className="w-full rounded-card border border-border bg-surface px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 resize-y leading-relaxed"
           />
         </div>
 
@@ -380,11 +370,11 @@ export default function UploadInstructions() {
     <div className="flex flex-col gap-5 animate-fade-in-up">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-calm-100 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-calm-100 flex items-center justify-center">
             <ScanSearch className="w-5 h-5 text-calm-600" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-text-primary">
+            <h2 className="font-serif text-xl font-semibold text-text-primary">
               Text Extracted
             </h2>
             <p className="text-sm text-text-muted flex items-center gap-1.5">
@@ -400,7 +390,7 @@ export default function UploadInstructions() {
         <button
           type="button"
           onClick={handleReset}
-          className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-muted transition-colors bg-transparent border-0 cursor-pointer"
+          className="p-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-muted transition-colors bg-transparent border-0 cursor-pointer"
           title="Upload a different file"
         >
           <X className="w-4 h-4" />
@@ -418,14 +408,14 @@ export default function UploadInstructions() {
 
       {/* Editable extracted text */}
       <div>
-        <label className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 block">
+        <label className="text-xs font-semibold text-text-muted mb-2 block">
           Extracted text
         </label>
         <textarea
           value={extractedText}
           onChange={(e) => setExtractedText(e.target.value)}
           rows={12}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-text-primary focus:outline-2 focus:outline-brand-500 resize-y leading-relaxed font-mono"
+          className="w-full rounded-card border border-border bg-surface px-4 py-3 text-sm text-text-primary focus:outline-2 focus:outline-brand-500 resize-y leading-relaxed font-mono"
         />
       </div>
 

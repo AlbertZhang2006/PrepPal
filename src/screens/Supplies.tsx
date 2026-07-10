@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   CheckCircle2,
   Circle,
   Plus,
@@ -12,6 +11,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import {
   loadChecklist,
   toggleItem,
@@ -62,18 +62,11 @@ export default function Supplies() {
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back */}
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Go back
-      </button>
+      <BackLink label="Go back" onClick={() => navigate(-1)} className="self-start" />
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-xl font-semibold text-text-primary flex items-center gap-2">
           <ShoppingCart className="w-6 h-6 text-brand-500" />
           Prep Supplies
         </h2>
@@ -165,14 +158,14 @@ export default function Supplies() {
           onKeyDown={handleKeyDown}
           placeholder="Add your own item..."
           aria-label="Add a custom supply item"
-          className="flex-1 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
+          className="flex-1 rounded-card border border-border bg-surface px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
         />
         <button
           type="button"
           onClick={handleAdd}
           disabled={!newLabel.trim()}
           aria-label="Add item"
-          className="w-11 h-11 rounded-xl bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-0 cursor-pointer shrink-0"
+          className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-0 cursor-pointer shrink-0"
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -224,7 +217,7 @@ export default function Supplies() {
         >
           <Card className="hover:bg-surface-muted transition-colors">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-full bg-brand-50 flex items-center justify-center shrink-0">
                 <ShoppingCart className="w-4 h-4 text-brand-600" />
               </div>
               <div className="flex-1 min-w-0">

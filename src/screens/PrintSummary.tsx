@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import { loadPlan, formatEventTime } from "../lib/plan-utils";
 import { loadChecklist } from "../lib/supplies";
 import type { PrepPlan, ActiveProcedureType } from "../lib/types";
@@ -156,7 +157,7 @@ function InfoField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-border px-3 py-2 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 print:border-0 print:px-0 print:py-0"
+        className="w-full rounded-card border border-border px-3 py-2 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 print:border-0 print:px-0 print:py-0"
       />
     </div>
   );
@@ -214,19 +215,12 @@ export default function PrintSummary() {
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back + actions (hidden in print) */}
       <div className="flex items-center justify-between no-print">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 bg-transparent border-0 cursor-pointer p-0"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Go back
-        </button>
+        <BackLink label="Go back" onClick={() => navigate(-1)} />
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-text-secondary border border-border hover:bg-surface-muted transition-colors cursor-pointer bg-surface"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-text-secondary border border-border hover:bg-surface-muted transition-colors cursor-pointer bg-surface shadow-card"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-calm-600" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? "Copied" : "Copy Text"}
@@ -234,7 +228,7 @@ export default function PrintSummary() {
           <button
             type="button"
             onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors cursor-pointer border-0"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white bg-gradient-to-b from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 transition-colors cursor-pointer border-0 shadow-card"
           >
             <Printer className="w-3.5 h-3.5" />
             Print / Save PDF
@@ -248,7 +242,7 @@ export default function PrintSummary() {
         <div className="text-center mb-6 print-summary">
           <div className="flex items-center justify-center gap-2 mb-2">
             <PrepPalIcon size={32} />
-            <h1 className="text-xl font-bold text-text-primary">PrepPal — Prep Summary</h1>
+            <h1 className="font-serif text-xl font-semibold text-text-primary">PrepPal — Prep Summary</h1>
           </div>
           <p className="text-sm text-text-secondary">
             {fmtDate(plan.procedureDate)}
@@ -383,7 +377,7 @@ export default function PrintSummary() {
                 onChange={(e) => updateInfo("rideNotes", e.target.value)}
                 placeholder="Pickup time, meeting spot, or anything your driver should know"
                 rows={2}
-                className="w-full rounded-lg border border-border px-3 py-2 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 resize-y print:border-0 print:px-0 print:py-0"
+                className="w-full rounded-card border border-border px-3 py-2 text-sm text-text-primary bg-surface placeholder:text-text-muted focus:outline-2 focus:outline-brand-500 resize-y print:border-0 print:px-0 print:py-0"
               />
             </div>
           </div>

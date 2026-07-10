@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import {
   loadReminderPrefs,
   saveReminderPrefs,
@@ -72,18 +73,11 @@ export default function Reminders() {
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back */}
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Go back
-      </button>
+      <BackLink label="Go back" onClick={() => navigate(-1)} className="self-start" />
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-xl font-semibold text-text-primary flex items-center gap-2">
           <Bell className="w-6 h-6 text-brand-500" aria-hidden="true" />
           Reminder Preferences
         </h2>
@@ -108,7 +102,7 @@ export default function Reminders() {
 
       {/* Toggles */}
       <Card>
-        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-1">
+        <h3 className="text-sm font-semibold text-text-primary mb-1">
           Remind me...
         </h3>
         <div className="flex flex-col divide-y divide-border">
@@ -146,7 +140,7 @@ export default function Reminders() {
       {/* Status */}
       <Card className={anyEnabled ? "bg-calm-50 border-calm-200" : undefined}>
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
             anyEnabled ? "bg-calm-100" : "bg-surface-muted"
           }`}>
             {anyEnabled ? (
@@ -170,31 +164,25 @@ export default function Reminders() {
 
       {/* Preview section */}
       <div>
-        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5">
+        <h3 className="text-sm font-semibold text-text-primary mb-2.5">
           What reminders look like
         </h3>
         <div className="flex flex-col gap-2.5">
-          <Card className="bg-brand-50 border-brand-200">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center shrink-0">
-                <Clock className="w-4 h-4 text-brand-600" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider">Upcoming Reminder</p>
-                <p className="text-sm font-medium text-brand-900 mt-0.5">Your next step starts in 30 minutes.</p>
-                <p className="text-xs text-brand-700 mt-0.5">Scheduled for 6:00 PM</p>
+          <Card className="bg-brand-50 border-brand-200 py-3">
+            <div className="flex items-center gap-3">
+              <Clock className="w-4 h-4 text-brand-500 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-brand-800">Your next step starts in 30 minutes.</p>
+                <p className="text-xs text-brand-600 mt-0.5">Scheduled for 6:00 PM</p>
               </div>
             </div>
           </Card>
-          <Card variant="warm">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-warm-100 flex items-center justify-center shrink-0">
-                <AlertCircle className="w-4 h-4 text-warm-600" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-warm-600 uppercase tracking-wider">Past Due</p>
-                <p className="text-sm font-medium text-warm-800 mt-0.5">A step appears to be past due.</p>
-                <p className="text-xs text-warm-700 mt-0.5">Review your instruction sheet.</p>
+          <Card variant="warm" className="py-3">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-4 h-4 text-warm-500 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-warm-800">A step appears to be past due.</p>
+                <p className="text-xs text-warm-600 mt-0.5">Review your instruction sheet.</p>
               </div>
             </div>
           </Card>

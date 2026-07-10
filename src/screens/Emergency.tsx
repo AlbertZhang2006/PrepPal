@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   Phone,
   AlertTriangle,
   Building2,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 
 interface ContactEntry {
   id: string;
@@ -102,7 +102,7 @@ function ContactCard({
   return (
     <div className="flex items-center gap-3 py-3">
       <div
-        className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${colors}`}
+        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${colors}`}
       >
         <Icon className="w-5 h-5" />
       </div>
@@ -117,7 +117,7 @@ function ContactCard({
               placeholder="Enter phone number"
               aria-label={`Phone number for ${entry.label}`}
               autoFocus
-              className="flex-1 min-w-0 rounded-md border border-brand-300 bg-surface px-2.5 py-1.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
+              className="flex-1 min-w-0 rounded-card border border-brand-300 bg-surface px-2.5 py-1.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-2 focus:outline-brand-500"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSave();
                 if (e.key === "Escape") handleCancel();
@@ -127,7 +127,7 @@ function ContactCard({
               type="button"
               onClick={handleSave}
               aria-label="Save phone number"
-              className="w-10 h-10 rounded-md bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 transition-colors border-0 cursor-pointer shrink-0"
+              className="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 transition-colors border-0 cursor-pointer shrink-0"
             >
               <Check className="w-4 h-4" />
             </button>
@@ -135,7 +135,7 @@ function ContactCard({
               type="button"
               onClick={handleCancel}
               aria-label="Cancel editing"
-              className="w-10 h-10 rounded-md bg-surface-muted flex items-center justify-center hover:bg-surface-dim transition-colors border-0 cursor-pointer shrink-0"
+              className="w-10 h-10 rounded-full bg-surface-muted flex items-center justify-center hover:bg-surface-dim transition-colors border-0 cursor-pointer shrink-0"
             >
               <X className="w-4 h-4 text-text-muted" />
             </button>
@@ -167,10 +167,14 @@ function ContactCard({
       {!editing && entry.phone && (
         <a
           href={`tel:${entry.phone}`}
-          className="w-11 h-11 rounded-full bg-brand-100 flex items-center justify-center hover:bg-brand-200 transition-colors shrink-0"
+          className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors shrink-0 ${
+            entry.icon === "siren"
+              ? "bg-urgent-100 hover:bg-urgent-200"
+              : "bg-brand-100 hover:bg-brand-200"
+          }`}
           aria-label={`Call ${entry.label} at ${entry.phone}`}
         >
-          <Phone className="w-4 h-4 text-brand-600" />
+          <Phone className={`w-4 h-4 ${entry.icon === "siren" ? "text-urgent-600" : "text-brand-600"}`} />
         </a>
       )}
     </div>
@@ -194,18 +198,11 @@ export default function Emergency() {
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back */}
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Go back
-      </button>
+      <BackLink label="Go back" onClick={() => navigate(-1)} className="self-start" />
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-text-primary">
+        <h2 className="font-serif text-xl font-semibold text-text-primary">
           Help &amp; Contacts
         </h2>
         <p className="text-sm text-text-secondary mt-1">
@@ -240,11 +237,11 @@ export default function Emergency() {
 
       {/* Contact cards */}
       <Card>
-        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-1">
+        <h3 className="text-sm font-semibold text-text-primary mb-1">
           Your contacts
         </h3>
         {contacts.every((c) => !c.phone) && (
-          <p className="text-xs text-text-muted bg-surface-muted rounded-lg px-3 py-2 mb-2 leading-relaxed">
+          <p className="text-xs text-text-secondary bg-surface-muted rounded-card px-3 py-2 mb-2 leading-relaxed">
             No numbers saved yet. Tap the pencil icon to add your clinic's phone
             numbers so they're easy to find when you need them.
           </p>

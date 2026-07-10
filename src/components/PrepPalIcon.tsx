@@ -14,7 +14,7 @@ export default function PrepPalIcon({ size = 32, className = "" }: PrepPalIconPr
       className={className}
       aria-hidden="true"
     >
-      <rect width="32" height="32" rx="7" fill="#0074c5" />
+      <rect width="32" height="32" rx="10" fill="#2b555f" />
       <path
         d="M10 9.5h12a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H10A1.5 1.5 0 0 1 8.5 21V11A1.5 1.5 0 0 1 10 9.5z"
         stroke="white"

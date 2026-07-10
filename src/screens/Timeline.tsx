@@ -2,22 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
-  Clock,
-  ChevronRight,
-  Pill,
-  ShoppingCart,
-  UtensilsCrossed,
-  Droplets,
-  Ban,
-  MapPin,
-  Stethoscope,
   AlertCircle,
   Circle,
   CalendarPlus,
+  ChevronRight,
 } from "lucide-react";
 import Card from "../components/Card";
-import Button from "../components/Button";
-import type { PrepPlan, PrepEvent, EventCategory } from "../lib/types";
+import FocusStepCard from "../components/FocusStepCard";
+import CelebrationAccent from "../components/CelebrationAccent";
+import type { PrepPlan, PrepEvent } from "../lib/types";
 import {
   loadPlan,
   savePlan,
@@ -30,18 +23,6 @@ import {
   formatEventTime,
 } from "../lib/plan-utils";
 import { downloadIcs } from "../lib/calendar-export";
-
-/* ── Category icons (focus card only) ── */
-
-const CATEGORY_ICONS: Record<EventCategory, typeof Clock> = {
-  preparation: ShoppingCart,
-  diet: UtensilsCrossed,
-  medication: Pill,
-  hydration: Droplets,
-  restriction: Ban,
-  arrival: MapPin,
-  procedure: Stethoscope,
-};
 
 /* ── Item status ── */
 
@@ -108,26 +89,6 @@ function getPhase(event: PrepEvent, procedureDate: string): Phase {
   }
 
   return "before-prep";
-}
-
-/* ── Helpers ── */
-
-function firstSentence(text: string): string {
-  const match = text.match(/^[^.!?]+[.!?]/);
-  return match ? match[0] : text;
-}
-
-function getRelativeTimeLabel(isoString: string, now: Date): string {
-  const eventDate = new Date(isoString);
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const eventDay = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-  const diffDays = Math.round((eventDay.getTime() - today.getTime()) / 86_400_000);
-
-  const time = formatEventTime(isoString);
-  if (diffDays === 0) return `Today at ${time}`;
-  if (diffDays === 1) return `Tomorrow at ${time}`;
-  if (diffDays === -1) return `Yesterday at ${time}`;
-  return `${eventDate.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at ${time}`;
 }
 
 /* ── Compact list item status rendering ── */
@@ -208,8 +169,8 @@ export default function Timeline() {
       {/* ── 1. Compact progress header ── */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-text-primary">Your Timeline</h2>
-          <span className="text-xs text-text-muted">
+          <h2 className="font-serif text-xl font-semibold text-text-primary">Your Timeline</h2>
+          <span className="text-xs text-text-muted bg-surface-muted rounded-full px-2.5 py-1">
             {progress.completed}/{progress.total} done
           </span>
         </div>
@@ -221,7 +182,7 @@ export default function Timeline() {
         )}
 
         <div
-          className="h-1.5 bg-surface-muted rounded-full overflow-hidden"
+          className="h-2 bg-surface-muted rounded-full overflow-hidden"
           role="progressbar"
           aria-valuenow={progress.percentage}
           aria-valuemin={0}
@@ -236,82 +197,22 @@ export default function Timeline() {
       </div>
 
       {/* ── 2. Focus card OR completion state ── */}
-      {focusEvent ? (() => {
-        const isAttention = focusStatus === "attention";
-        const FocusIcon = CATEGORY_ICONS[focusEvent.category];
-        return (
-          <Card className={`mt-5 ${isAttention ? "bg-warm-50 border-warm-200" : "bg-brand-50 border-brand-200"}`}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
-                isAttention ? "bg-warm-100" : "bg-brand-100"
-              }`}>
-                <FocusIcon className={`w-3.5 h-3.5 ${isAttention ? "text-warm-600" : "text-brand-600"}`} />
-              </div>
-              <p className={`text-xs font-medium uppercase tracking-wider ${
-                isAttention ? "text-warm-500" : "text-brand-500"
-              }`}>
-                {focusStatus === "current"
-                  ? "Happening Now"
-                  : isAttention
-                    ? "Review This Step"
-                    : "Your Next Step"}
-              </p>
-            </div>
-
-            <h3 className={`text-lg font-bold ${isAttention ? "text-warm-900" : "text-brand-900"}`}>
-              {focusEvent.title}
-            </h3>
-            <p className={`text-sm mt-0.5 ${isAttention ? "text-warm-600" : "text-brand-600"}`}>
-              {getRelativeTimeLabel(focusEvent.startTime, now)}
-            </p>
-            <p className={`text-sm leading-relaxed mt-2 ${isAttention ? "text-warm-800" : "text-brand-800"}`}>
-              {firstSentence(focusEvent.guidance.whatToDo)}
-            </p>
-
-            {focusSupporting.length > 0 && (
-              <div className={`mt-2 pt-2 border-t ${
-                isAttention ? "border-warm-200/60" : "border-brand-200/60"
-              }`}>
-                <p className={`text-xs font-medium mb-0.5 ${
-                  isAttention ? "text-warm-500" : "text-brand-500"
-                }`}>
-                  Also at this time:
-                </p>
-                {focusSupporting.map((s) => (
-                  <p key={s.id} className={`text-xs leading-relaxed ${
-                    isAttention ? "text-warm-700" : "text-brand-700"
-                  }`}>
-                    • {s.title}
-                  </p>
-                ))}
-              </div>
-            )}
-
-            <div className="flex gap-2.5 mt-3">
-              <Button
-                size="sm"
-                className="flex-1"
-                onClick={() => navigate(`/event/${focusEvent.id}`)}
-              >
-                {isAttention ? "Review Step" : "View Step"}
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="flex-1"
-                onClick={() => handleMarkDone(focusEvent.id)}
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                Done
-              </Button>
-            </div>
-          </Card>
-        );
-      })() : allDone ? (
+      {focusEvent ? (
+        <FocusStepCard
+          className="mt-5"
+          event={focusEvent}
+          variant={focusStatus === "current" ? "current" : focusStatus === "attention" ? "attention" : "next"}
+          now={now}
+          supportingEvents={focusSupporting}
+          onView={() => navigate(`/event/${focusEvent.id}`)}
+          onMarkDone={() => handleMarkDone(focusEvent.id)}
+        />
+      ) : allDone ? (
         <div className="text-center py-8 mt-5">
-          <CheckCircle2 className="w-10 h-10 text-calm-500 mx-auto" aria-hidden="true" />
-          <p className="text-base font-bold text-calm-800 mt-3">All steps complete</p>
+          <CelebrationAccent className="mx-auto">
+            <CheckCircle2 className="w-10 h-10 text-calm-500" aria-hidden="true" />
+          </CelebrationAccent>
+          <p className="font-serif text-xl font-semibold text-calm-800 mt-3">All steps complete</p>
           <p className="text-sm text-calm-700 mt-1">You're ready for your procedure.</p>
         </div>
       ) : null}
@@ -325,7 +226,7 @@ export default function Timeline() {
 
         return (
           <div key={group.phase} className="mt-6">
-            <p className="text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
+            <p className="text-sm text-text-secondary mb-2">
               {group.label}
             </p>
             <Card className="py-1">
@@ -341,7 +242,7 @@ export default function Timeline() {
                       <button
                         type="button"
                         onClick={() => navigate(`/event/${event.id}`)}
-                        className="flex items-start gap-3 py-2.5 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
+                        className="flex items-start gap-3 py-3 bg-transparent border-0 cursor-pointer text-left w-full hover:opacity-75 transition-opacity"
                       >
                         <StatusIcon status={status} isFocus={isFocus} />
 

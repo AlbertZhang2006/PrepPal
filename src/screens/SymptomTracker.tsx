@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import {
   MILD_SYMPTOMS,
   SEVERE_SYMPTOMS,
@@ -81,18 +82,11 @@ export default function SymptomTracker() {
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
       {/* Back */}
-      <button
-        type="button"
-        onClick={() => navigate("/dashboard")}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Dashboard
-      </button>
+      <BackLink label="Back to Dashboard" onClick={() => navigate("/dashboard")} className="self-start" />
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-text-primary">
+        <h2 className="font-serif text-xl font-semibold text-text-primary">
           How Are You Feeling?
         </h2>
         <p className="text-sm text-text-secondary mt-1">
@@ -166,7 +160,7 @@ export default function SymptomTracker() {
 
       {/* Mild symptoms */}
       <div>
-        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5">
+        <h3 className="text-sm font-semibold text-text-primary mb-2.5">
           Common during prep
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -185,7 +179,7 @@ export default function SymptomTracker() {
 
       {/* Severe symptoms */}
       <div>
-        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5">
+        <h3 className="text-sm font-semibold text-text-primary mb-2.5">
           Worth calling your clinic about
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -206,7 +200,7 @@ export default function SymptomTracker() {
       {entries.length === 0 && !lastResult && (
         <Card variant="calm" className="text-center py-8">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-calm-100 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-card bg-calm-100 flex items-center justify-center">
               <Heart className="w-7 h-7 text-calm-500" />
             </div>
             <div>
@@ -226,7 +220,7 @@ export default function SymptomTracker() {
       {entries.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-2.5">
-            <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+            <h3 className="text-sm font-semibold text-text-primary">
               Your log
             </h3>
             <span className="text-xs text-text-muted">

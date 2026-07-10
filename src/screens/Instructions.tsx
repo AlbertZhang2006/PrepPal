@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import {
   FileText,
-  ArrowLeft,
   Edit3,
   ShieldCheck,
   ClipboardList,
 } from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import BackLink from "../components/BackLink";
 import { loadPlan } from "../lib/plan-utils";
 
 export default function Instructions() {
@@ -20,17 +20,10 @@ export default function Instructions() {
 
   return (
     <div className="flex flex-col gap-5 animate-fade-in-up">
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700 self-start bg-transparent border-0 cursor-pointer p-0"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Go back
-      </button>
+      <BackLink label="Go back" onClick={() => navigate(-1)} className="self-start" />
 
       <div>
-        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2">
+        <h2 className="font-serif text-xl font-semibold text-text-primary flex items-center gap-2">
           <FileText className="w-6 h-6 text-brand-500" />
           Your Original Instructions
         </h2>
@@ -60,7 +53,7 @@ export default function Instructions() {
       ) : (
         <Card className="text-center py-12">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-surface-muted flex items-center justify-center">
+            <div className="w-16 h-16 rounded-card bg-surface-muted flex items-center justify-center">
               <ClipboardList className="w-8 h-8 text-text-muted" />
             </div>
             <div>
